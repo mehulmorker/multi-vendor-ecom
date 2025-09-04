@@ -1,0 +1,1 @@
+“Follow PROJECT_GUIDE.md, API_REFERENCE.md, and DB_SCHEMA.md. Implement Day X from DAY_WISE_PLAN.md.”
