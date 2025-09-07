@@ -1,44 +1,52 @@
 export interface User {
-    id: string;
-    name: string;
-    email: string;
-    role: 'customer' | 'vendor' | 'admin';
+  id: string;
+  name: string;
+  email: string;
+  role: 'customer' | 'vendor' | 'admin';
 }
 
 export interface Product {
-    id: string;
-    vendorId: string;
-    name: string;
-    description: string;
-    price: number;
-    stock: number;
-    category: string;
-    images: string[];
+  id: string;
+  vendorId: string;
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+  category: string;
+  images: string[];
 }
 
 export interface Order {
-    id: string;
-    userId: string;
-    vendorId: string;
-    totalAmount: number;
-    status: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
+  id: string;
+  userId: string;
+  vendorId: string;
+  totalAmount: number;
+  status: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
 }
 
 export interface Payment {
-    id: string;
-    orderId: string;
-    stripePaymentId: string;
-    status: 'pending' | 'succeeded' | 'failed' | 'refunded';
-    amount: number;
+  id: string;
+  orderId: string;
+  stripePaymentId: string;
+  status: 'pending' | 'succeeded' | 'failed' | 'refunded';
+  amount: number;
 }
 
 export interface CartItem {
-    productId: string;
-    quantity: number;
+  productId: string;
+  quantity: number;
 }
 
 export interface Cart {
-    id: string;
-    userId: string;
-    items: CartItem[];
+  id: string;
+  userId: string;
+  items: CartItem[];
+}
+
+export interface EventEnvelope<T = any> {
+  event_type: string;
+  event_id: string;
+  schema_version: string;
+  timestamp: string;
+  payload: T;
 }

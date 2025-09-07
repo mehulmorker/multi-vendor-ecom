@@ -1,0 +1,49 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./libs/shared/tsconfig.json"
+    },
+    {
+      "path": "./services/analytics/tsconfig.json"
+    },
+    {
+      "path": "./services/auth/tsconfig.json"
+    },
+    {
+      "path": "./services/cart/tsconfig.json"
+    },
+    {
+      "path": "./services/indexer/tsconfig.json"
+    },
+    {
+      "path": "./services/notification/tsconfig.json"
+    },
+    {
+      "path": "./services/order/tsconfig.json"
+    },
+    {
+      "path": "./services/payment/tsconfig.json"
+    },
+    {
+      "path": "./services/product/tsconfig.json"
+    },
+    {
+      "path": "./services/user/tsconfig.json"
+    },
+    {
+      "path": "./services/vendor/tsconfig.json"
+    }
+  ],
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "commonjs",
+    "lib": ["ES2021"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true // This is a solution-style tsconfig, it won't emit any code itself
+  }
+}
+

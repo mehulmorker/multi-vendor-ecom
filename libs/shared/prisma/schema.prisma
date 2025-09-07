@@ -1,0 +1,162 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  password_hash String
+  role          UserRole
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+  vendors       Vendor[]
+  carts         Cart[]
+  orders        Order[]
+  notifications Notification[]
+  analytics     Analytics[]
+}
+
+enum UserRole {
+  customer
+  vendor
+  admin
+}
+
+model Vendor {
+  id              String    @id @default(uuid())
+  user_id         String    @unique
+  user            User      @relation(fields: [user_id], references: [id])
+  store_name      String
+  store_description String?
+  is_approved     Boolean   @default(false)
+  created_at      DateTime  @default(now())
+  products        Product[]
+  orders          Order[]
+  analytics       Analytics[]
+}
+
+model Product {
+  id            String    @id @default(uuid())
+  vendor_id     String
+  vendor        Vendor    @relation(fields: [vendor_id], references: [id])
+  name          String
+  description   String?
+  price         Decimal
+  stock         Int
+  category      String
+  images        Json[]    @default([])
+  created_at    DateTime  @default(now())
+  cart_items    CartItem[]
+  order_items   OrderItem[]
+  analytics     Analytics[]
+}
+
+model Cart {
+  id          String    @id @default(uuid())
+  user_id     String    @unique
+  user        User      @relation(fields: [user_id], references: [id])
+  created_at  DateTime  @default(now())
+  cart_items  CartItem[]
+}
+
+model CartItem {
+  id          String    @id @default(uuid())
+  cart_id     String
+  cart        Cart      @relation(fields: [cart_id], references: [id])
+  product_id  String
+  product     Product   @relation(fields: [product_id], references: [id])
+  quantity    Int
+
+  @@unique([cart_id, product_id])
+}
+
+model Order {
+  id          String    @id @default(uuid())
+  user_id     String
+  user        User      @relation(fields: [user_id], references: [id])
+  vendor_id   String
+  vendor      Vendor    @relation(fields: [vendor_id], references: [id])
+  total_amount Decimal
+  status      OrderStatus @default(pending)
+  created_at  DateTime  @default(now())
+  order_items OrderItem[]
+  payments    Payment[]
+}
+
+enum OrderStatus {
+  pending
+  paid
+  shipped
+  delivered
+  cancelled
+}
+
+model OrderItem {
+  id          String    @id @default(uuid())
+  order_id    String
+  order       Order     @relation(fields: [order_id], references: [id])
+  product_id  String
+  product     Product   @relation(fields: [product_id], references: [id])
+  quantity    Int
+  price       Decimal
+
+  @@unique([order_id, product_id])
+}
+
+model Payment {
+  id              String    @id @default(uuid())
+  order_id        String    @unique
+  order           Order     @relation(fields: [order_id], references: [id])
+  stripe_payment_id String
+  status          PaymentStatus @default(pending)
+  amount          Decimal
+  created_at      DateTime  @default(now())
+}
+
+enum PaymentStatus {
+  pending
+  succeeded
+  failed
+  refunded
+}
+
+model Notification {
+  id          String    @id @default(uuid())
+  user_id     String
+  user        User      @relation(fields: [user_id], references: [id])
+  message     String
+  is_read     Boolean   @default(false)
+  created_at  DateTime  @default(now())
+}
+
+model Analytics {
+  id          String    @id @default(uuid())
+  event_type  String // This will correspond to event_type enum from DB_SCHEMA.md but is string for flexibility
+  user_id     String?
+  user        User?     @relation(fields: [user_id], references: [id])
+  vendor_id   String?
+  vendor      Vendor?   @relation(fields: [vendor_id], references: [id])
+  product_id  String?
+  product     Product?  @relation(fields: [product_id], references: [id])
+  amount      Decimal?
+  created_at  DateTime  @default(now())
+}
+
+model Outbox {
+  id            String   @id @default(uuid())
+  aggregate_type String
+  aggregate_id  String
+  event_type    String
+  payload       Json
+  created_at    DateTime @default(now())
+
+  @@index([aggregate_type, aggregate_id])
+  @@index([created_at])
+}

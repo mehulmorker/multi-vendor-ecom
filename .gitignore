@@ -35,3 +35,6 @@ dist-dev
 # Misc
 .DS_Store
 Thumbs.db
+
+# Prisma generated client
+libs/shared/prisma/generated/
