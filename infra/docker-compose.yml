@@ -105,7 +105,7 @@ services:
     container_name: clickhouse_db
     ports:
       - '8123:8123'
-      - '9000:9000'
+      - '9004:9000' # Changed from 9000 to 9004 to avoid conflict with Minio
     volumes:
       - clickhouse_data:/var/lib/clickhouse
     environment:
