@@ -7,14 +7,14 @@ services:
     container_name: postgres_db
     environment:
       POSTGRES_DB: ecom_db
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U user -d ecom_db']
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d ecom_db']
       interval: 5s
       timeout: 5s
       retries: 5
